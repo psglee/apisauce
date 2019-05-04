@@ -20,7 +20,7 @@ import {
   always,
 } from 'ramda'
 
-import { adapter } from './adapter';
+let adapter = require('./adapter')
 
 /**
  * Converts the parameter to a number.
@@ -73,20 +73,25 @@ export const DEFAULT_HEADERS = {
   // 'Content-Type': 'application/json',
 
   'Content-Type': 'application/json;charset=utf-8',
-  'Charset': 'UTF-8'
+  Charset: 'UTF-8',
 }
 
-const stripBom = (input) => {
+const stripBom = input => {
   if (typeof input !== 'string') {
-		return input;
+    return input
   }
-  let processed = input;
+  let processed = input
 
-  while(processed.length > 0 && processed.charAt(0) != '{' && processed.charAt(0) != '['  && processed.charAt(0) != '<') {
+  while (
+    processed.length > 0 &&
+    processed.charAt(0) !== '{' &&
+    processed.charAt(0) !== '[' &&
+    processed.charAt(0) !== '<'
+  ) {
     processed = processed.slice(1)
   }
 
-	return processed;
+  return processed
 }
 
 // the default configuration for axios, default headers will also be merged in
@@ -95,10 +100,10 @@ const DEFAULT_CONFIG = {
 
   responseType: 'text',
   adapter: adapter,
-  transformResponse: (data) => {
+  transformResponse: data => {
     const unicodeText = stripBom(data)
-    if(typeof unicodeText != 'string') {
-      return unicodeText;
+    if (typeof unicodeText !== 'string') {
+      return unicodeText
     }
 
     try {
@@ -107,7 +112,7 @@ const DEFAULT_CONFIG = {
       // console.log('>>>>>>>>>>> PARSE', error)
     }
     return unicodeText
-  }
+  },
 }
 
 export const NONE = null
